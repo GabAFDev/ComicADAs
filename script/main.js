@@ -30,7 +30,7 @@ const publicKey = `&apikey=fce7b36328723d964caf6df4a1aa294c`
 const hash = `&hash=7391644ad1562b5dbed2616db50485d4`
 
 const defineResourceRequest = (resource , resourceID , plus) => {
-    let baseURL = `${urlBase}/${resource}`
+    let baseURL = `${urlBase}${resource}`
 
     if (!resourceID && !plus) {
         baseURL
@@ -51,20 +51,20 @@ const definePath = (resource , resourceID , plus) => {
     return url
 }
 
-const requestData = async() => {
-    const path = definePath("comics")
-    const response = await fetch(path)
+const requestData = async(url) => {
+    const response = await fetch(url)
     const data = await response.json()
-    console.log(data)
-    return data
+    return data.data.results
 }
 
-requestData()
+const getComics = async() => {
+    const comics = await requestData(definePath("comics"))
+    return comics
+}
 
-// const printResults = () => {
+const getCharacters = async() => {
+    const characters = await requestData(definePath("characters"))
+    return characters
+}
 
-// }
 
-// const initialize = () => {
-//     requestData(comics)
-// }

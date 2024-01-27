@@ -68,3 +68,60 @@ const getCharacters = async() => {
 }
 
 
+const printComics = async() => {
+    const comics = await getComics()
+    for (let comic of comics) {
+        $("#results").innerHTML += `
+        <div onclick= "showComicDetails(${comic.id})">
+            <img src="${comic.thumbnail.path}/portrait_uncanny.${comic.thumbnail.extension}" alt="">
+            <p>${comic.title}</p>
+        </div>
+        `
+    }
+}
+
+const printCharacters = async() => {
+    const characters = await getCharacters()
+    for (let character of characters) {
+        $("#results").innerHTML += `
+        <div onclick= "showCharacterDetails(${character.id})">
+            <img src="${character.thumbnail.path}/portrait_uncanny.${character.thumbnail.extension}" alt="">
+            <p>${character.name}</p>
+        </div>
+        `
+    }
+}
+
+const updateInfo = (selector , text) => $(selector).innerText = `${text}`
+
+const showComicDetails = async(comicID) => {
+    showScreen("#comicDetail")
+    const comic = await requestData(definePath("comics" , comicID))
+
+    $("#comicCover").src = `${comic[0].thumbnail.path}.${comic[0].thumbnail.extension}`
+
+    updateInfo("#comicTitle" , comic[0].title)
+
+    updateInfo("#comicDate" , new Intl.DateTimeFormat('es-AR').format(new Date(comic[0].dates.find((date) => date.type === 'onsaleDate').date)
+    ))
+
+    updateInfo("#comicCreators" , comic[0].creators.items
+    .map((writer) => writer.name)
+    .join(", ")
+    )
+    updateInfo("#comicDescription" , comic[0].description)
+    console.log(comic)
+}
+
+
+
+// const showCharacterDetails = async() => {
+
+// }
+
+
+const initialize = async() => {
+    printComics()
+}
+
+window.onload = initialize()

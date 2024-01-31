@@ -64,10 +64,43 @@
             </div>
         </section>
 
+        <!-- Comic section -->
+
+        <section class="hidden mx-[10px] screen" id="comicDetail">
+            <img src="" alt="" id="comicCover" class="mt-[35px]">
+            <div class="mb-[15px]">
+                <h2 id="comicTitle"  class="mt-[15px] font-bold text-[2rem]"></h2>
+                <h3 class="mt-[5px] font-bold text-[1.5rem]">Publicado:</h3>
+                <p id="comicDate"></p>
+                <h3 class="mt-[5px] font-bold text-[1.5rem]">Guionistas:</h3>
+                <p id="comicCreators"></p>
+                <h3 class="mt-[5px] font-bold text-[1.5rem]">Descripción:</h3>
+                <p id="comicDescription"></p>
+            </div>
+            <div id="comicCharacters">
+                
+                <h2 id="resultsTitle" class="mt-[30px] text-[35px] font-bold">Personajes</h2>
+                <p class="font-bold text-slate-600"><span>0</span> RESULTADOS</p>
+                <div class="grid grid-cols-5 gap-4" id="charactersResults">
+                    <!-- here will be shown the characters -->
+                </div>
+            </div>
+        </section>
+
+        <!-- Character section -->
+
+        <section class="hidden mx-[10px] screen">
+            <img src="" alt="" class="mt-[35px]"> 
+            <div id="">
+                <h2></h2>
+                <p></p>
+            </div>
+        </section>
+
         <!-- Results section -->
 
         <section class="mx-[10px] screen">
-            <h2 class="mt-[30px] text-[35px] font-bold">Resultados</h2>
+            <h2 id="resultsTitle" class="mt-[30px] text-[35px] font-bold">Resultados</h2>
             <p class="font-bold text-slate-600"><span>0</span> RESULTADOS</p>
             <div class="grid grid-cols-5 gap-4" id="results">
                 <!-- this place will show search results -->
@@ -80,30 +113,7 @@
             </div>
         </section>
 
-        <!-- Comic section -->
-
-        <section class="hidden mx-[10px] screen" id="comicDetail">
-            <img src="" alt="" id="comicCover">
-            <div>
-                <h2 id="comicTitle"></h2>
-                <h3>Publicado:</h3>
-                <p id="comicDate"></p>
-                <h3>Guionistas:</h3>
-                <p id="comicCreators"></p>
-                <h3>Descripción:</h3>
-                <p id="comicDescription"></p>
-            </div>
-        </section>
-
-        <!-- Character section -->
-
-        <section class="hidden mx-[10px] screen">
-            <img src="" alt="">
-            <div>
-                <h2></h2>
-                <p></p>
-            </div>
-        </section>
+        
 
     </main>
     <footer class="flex bg-black justify-center fixed bottom-0 w-[100%] h-[75px]">

@@ -17,6 +17,8 @@ const showScreen = (screenName) => {
     $(`${screenName}`).classList.remove('hidden')
 }
 
+const show = (selector) => $(`${selector}`).classList.remove('hidden')
+
 // cleaner //
 
 const cleanContainer = (selector) => $(selector).innerHTML = ""
@@ -62,31 +64,39 @@ const getComics = async() => {
     return comics
 }
 
+const getComicCharacters = async(comicID) => {
+    const comicCharacters = await requestData(definePath("comics" , comicID , "characters"))
+    return comicCharacters
+}
+
 const getCharacters = async() => {
     const characters = await requestData(definePath("characters"))
     return characters
 }
 
 
-const printComics = async() => {
-    const comics = await getComics()
+// hay que pasarles una ruta para que impriman algo 
+
+const printComics = async(path) => {
+    const comics = await path
     for (let comic of comics) {
         $("#results").innerHTML += `
         <div onclick= "showComicDetails(${comic.id})">
-            <img src="${comic.thumbnail.path}/portrait_uncanny.${comic.thumbnail.extension}" alt="">
-            <p>${comic.title}</p>
+            <img src="${comic.thumbnail.path}/portrait_uncanny.${comic.thumbnail.extension}" alt="" class="mt-[5 px]">
+            <p class="font-bold mt-[15px]">${comic.title}</p>
         </div>
         `
     }
 }
 
-const printCharacters = async() => {
-    const characters = await getCharacters()
+const printCharacters = async(path , selector) => {
+    let screen = selector || "#results"
+    const characters = await path
     for (let character of characters) {
-        $("#results").innerHTML += `
+        $(screen).innerHTML += `
         <div onclick= "showCharacterDetails(${character.id})">
-            <img src="${character.thumbnail.path}/portrait_uncanny.${character.thumbnail.extension}" alt="">
-            <p>${character.name}</p>
+            <img src="${character.thumbnail.path}/portrait_uncanny.${character.thumbnail.extension}" alt="" class="mt-[5 px]">
+            <p class="font-bold text-white bg-red-700">${character.name}</p>
         </div>
         `
     }
@@ -110,8 +120,12 @@ const showComicDetails = async(comicID) => {
     .join(", ")
     )
     updateInfo("#comicDescription" , comic[0].description)
-    console.log(comic)
+
+    updateInfo("#resultsTitle" , "Personajes")
+    printCharacters(getComicCharacters(comicID) , "#charactersResults")
 }
+
+
 
 
 
@@ -121,7 +135,7 @@ const showComicDetails = async(comicID) => {
 
 
 const initialize = async() => {
-    printComics()
+    printComics(getComics())
 }
 
 window.onload = initialize()

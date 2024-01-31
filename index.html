@@ -77,14 +77,6 @@
                 <h3 class="mt-[5px] font-bold text-[1.5rem]">Descripción:</h3>
                 <p id="comicDescription"></p>
             </div>
-            <div id="comicCharacters">
-                
-                <h2 id="resultsTitle" class="mt-[30px] text-[35px] font-bold">Personajes</h2>
-                <p class="font-bold text-slate-600"><span>0</span> RESULTADOS</p>
-                <div class="grid grid-cols-5 gap-4" id="charactersResults">
-                    <!-- here will be shown the characters -->
-                </div>
-            </div>
         </section>
 
         <!-- Character section -->
@@ -95,21 +87,13 @@
                 <h2 id="characterName"  class="mt-[15px] font-bold text-[2rem]"></h2>
                 <p id="characterDescription"></p>
             </div>
-            <div id="characterComics">
-                
-                <h2 class="mt-[30px] text-[35px] font-bold">Comics</h2>
-                <p class="font-bold text-slate-600"><span>0</span> RESULTADOS</p>
-                <div class="grid grid-cols-5 gap-4" id="comicResults">
-                    <!-- here will be shown the comics -->
-                </div>
-            </div>
         </section>
 
         <!-- Results section -->
 
         <section class="mx-[10px] screen">
             <h2 id="resultsTitle" class="mt-[30px] text-[35px] font-bold">Resultados</h2>
-            <p class="font-bold text-slate-600"><span>0</span> RESULTADOS</p>
+            <p class="font-bold text-slate-600"><span class="resultsCount">0</span> RESULTADOS</p>
             <div class="grid grid-cols-5 gap-4" id="results">
                 <!-- this place will show search results -->
             </div>
@@ -120,8 +104,6 @@
                 <button class="bg-black text-white text-[30px] p-[10px] px-[20px] m-[3px] hover:bg-red-600 disabled:opacity-75"><i class="fa-solid fa-angles-right"></i></button>
             </div>
         </section>
-
-        
 
     </main>
     <footer class="flex bg-black justify-center fixed bottom-0 w-[100%] h-[75px]">

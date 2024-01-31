@@ -19,6 +19,8 @@ const showScreen = (screenName) => {
 
 const show = (selector) => $(`${selector}`).classList.remove('hidden')
 
+const hide = (selector) => $(`${selector}`).classList.add('hidden')
+
 // cleaner //
 
 const cleanContainer = (selector) => $(selector).innerHTML = ""
@@ -85,11 +87,10 @@ const getCharacterComics = async(characterID) => {
 
 // hay que pasarles una ruta para que impriman algo 
 
-const printComics = async(path , selector) => {
-    let screen = selector || "#results"
+const printComics = async(path) => {
     const comics = await path
     for (let comic of comics) {
-        $(screen).innerHTML += `
+        $("#results").innerHTML += `
         <div onclick= "showComicDetails(${comic.id})">
             <img src="${comic.thumbnail.path}/portrait_uncanny.${comic.thumbnail.extension}" alt="" class="mt-[5 px]">
             <p class="font-bold mt-[15px]">${comic.title}</p>
@@ -98,11 +99,10 @@ const printComics = async(path , selector) => {
     }
 }
 
-const printCharacters = async(path , selector) => {
-    let screen = selector || "#results"
+const printCharacters = async(path) => {
     const characters = await path
     for (let character of characters) {
-        $(screen).innerHTML += `
+        $("#results").innerHTML += `
         <div onclick= "showCharacterDetails(${character.id})">
             <img src="${character.thumbnail.path}/portrait_uncanny.${character.thumbnail.extension}" alt="" class="mt-[5 px]">
             <p class="font-bold text-white bg-red-700">${character.name}</p>
@@ -116,7 +116,9 @@ const printCharacters = async(path , selector) => {
 // Showing details
 
 const showComicDetails = async(comicID) => {
-    showScreen("#comicDetail")
+    show("#comicDetail")
+    hide("#characterDetail")
+    cleanContainer("#results")
     const comic = await requestData(definePath("comics" , comicID))
 
     $("#comicCover").src = `${comic[0].thumbnail.path}.${comic[0].thumbnail.extension}`
@@ -132,11 +134,14 @@ const showComicDetails = async(comicID) => {
     )
     updateInfo("#comicDescription" , comic[0].description)
 
-    printCharacters(getComicCharacters(comicID) , "#charactersResults")
+    updateInfo("#resultsTitle" , "Personajes")
+    printCharacters(getComicCharacters(comicID))
 }
 
 const showCharacterDetails = async(characterID) => {
-    showScreen("#characterDetail")
+    show("#characterDetail")
+    hide("#comicDetail")
+    cleanContainer("#results")
     const character = await requestData(definePath("characters" , characterID))
     console.log(character);
 
@@ -146,7 +151,8 @@ const showCharacterDetails = async(characterID) => {
 
     updateInfo("#characterDescription" , character[0].description)
 
-    printComics(getCharacterComics(characterID) , "#comicResults")
+    updateInfo("#resultsTitle" , "Comics")
+    printComics(getCharacterComics(characterID))
 }
 
 

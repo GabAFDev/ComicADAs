@@ -22,7 +22,9 @@ const show = (selector) => $(`${selector}`).classList.remove('hidden')
 // cleaner //
 
 const cleanContainer = (selector) => $(selector).innerHTML = ""
+// Text updater
 
+const updateInfo = (selector , text) => $(selector).innerText = `${text}`
 
 // API
 
@@ -53,6 +55,8 @@ const definePath = (resource , resourceID , plus) => {
     return url
 }
 
+//API requests
+
 const requestData = async(url) => {
     const response = await fetch(url)
     const data = await response.json()
@@ -74,13 +78,18 @@ const getCharacters = async() => {
     return characters
 }
 
+const getCharacterComics = async(characterID) => {
+    const characterComics = await requestData(definePath("characters" , characterID , "comics"))
+    return characterComics
+}
 
 // hay que pasarles una ruta para que impriman algo 
 
-const printComics = async(path) => {
+const printComics = async(path , selector) => {
+    let screen = selector || "#results"
     const comics = await path
     for (let comic of comics) {
-        $("#results").innerHTML += `
+        $(screen).innerHTML += `
         <div onclick= "showComicDetails(${comic.id})">
             <img src="${comic.thumbnail.path}/portrait_uncanny.${comic.thumbnail.extension}" alt="" class="mt-[5 px]">
             <p class="font-bold mt-[15px]">${comic.title}</p>
@@ -102,7 +111,9 @@ const printCharacters = async(path , selector) => {
     }
 }
 
-const updateInfo = (selector , text) => $(selector).innerText = `${text}`
+
+
+// Showing details
 
 const showComicDetails = async(comicID) => {
     showScreen("#comicDetail")
@@ -121,17 +132,22 @@ const showComicDetails = async(comicID) => {
     )
     updateInfo("#comicDescription" , comic[0].description)
 
-    updateInfo("#resultsTitle" , "Personajes")
     printCharacters(getComicCharacters(comicID) , "#charactersResults")
 }
 
+const showCharacterDetails = async(characterID) => {
+    showScreen("#characterDetail")
+    const character = await requestData(definePath("characters" , characterID))
+    console.log(character);
 
+    $("#characterImage").src = `${character[0].thumbnail.path}.${character[0].thumbnail.extension}`
 
+    updateInfo("#characterName" , character[0].name)
 
+    updateInfo("#characterDescription" , character[0].description)
 
-// const showCharacterDetails = async() => {
-
-// }
+    printComics(getCharacterComics(characterID) , "#comicResults")
+}
 
 
 const initialize = async() => {

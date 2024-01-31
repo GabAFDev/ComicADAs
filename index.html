@@ -89,11 +89,19 @@
 
         <!-- Character section -->
 
-        <section class="hidden mx-[10px] screen">
-            <img src="" alt="" class="mt-[35px]"> 
-            <div id="">
-                <h2></h2>
-                <p></p>
+        <section class="hidden mx-[10px] screen" id="characterDetail">
+            <img src="" alt="" id="characterImage" class="mt-[35px]">
+            <div class="mb-[15px]">
+                <h2 id="characterName"  class="mt-[15px] font-bold text-[2rem]"></h2>
+                <p id="characterDescription"></p>
+            </div>
+            <div id="characterComics">
+                
+                <h2 class="mt-[30px] text-[35px] font-bold">Comics</h2>
+                <p class="font-bold text-slate-600"><span>0</span> RESULTADOS</p>
+                <div class="grid grid-cols-5 gap-4" id="comicResults">
+                    <!-- here will be shown the comics -->
+                </div>
             </div>
         </section>
 

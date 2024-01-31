@@ -28,7 +28,9 @@ const cleanContainer = (selector) => $(selector).innerHTML = ""
 
 const updateInfo = (selector , text) => $(selector).innerText = `${text}`
 
-// API
+// ---------------------- API ----------------------//
+
+// API url definition 
 
 const urlBase = `http://gateway.marvel.com/v1/public/`
 let ts = `ts=1`
@@ -88,6 +90,7 @@ const getCharacterComics = async(characterID) => {
 }
 
 //API requests Totals
+
 const requestCount = async(url) => {
     const response = await fetch(url)
     const data = await response.json()
@@ -100,7 +103,7 @@ const getComicsTotal = async() => {
     return total
 }
 
-// hay que pasarles una ruta para que impriman algo 
+// printers
 
 const printComics = async(path) => {
     const comics = await path
@@ -125,8 +128,6 @@ const printCharacters = async(path) => {
         `
     }
 }
-
-
 
 // Showing details
 
@@ -176,6 +177,7 @@ const showCharacterDetails = async(characterID) => {
     updateInfo(".resultsCount" , comics.length)
 }
 
+// Initialilize
 
 const initialize = async() => {
     printComics(getComics())

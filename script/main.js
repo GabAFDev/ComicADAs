@@ -57,7 +57,7 @@ const definePath = (resource , resourceID , plus) => {
     return url
 }
 
-//API requests
+//API requests Results
 
 const requestData = async(url) => {
     const response = await fetch(url)
@@ -67,11 +67,13 @@ const requestData = async(url) => {
 
 const getComics = async() => {
     const comics = await requestData(definePath("comics"))
+    console.log(comics);
     return comics
 }
 
 const getComicCharacters = async(comicID) => {
     const comicCharacters = await requestData(definePath("comics" , comicID , "characters"))
+    console.log(comicCharacters)
     return comicCharacters
 }
 
@@ -83,6 +85,19 @@ const getCharacters = async() => {
 const getCharacterComics = async(characterID) => {
     const characterComics = await requestData(definePath("characters" , characterID , "comics"))
     return characterComics
+}
+
+//API requests Totals
+const requestCount = async(url) => {
+    const response = await fetch(url)
+    const data = await response.json()
+    return data.data.total
+}
+
+const getComicsTotal = async() => {
+    const total = await requestCount(definePath("comics"))
+    updateInfo(".resultsCount" , total)
+    return total
 }
 
 // hay que pasarles una ruta para que impriman algo 
@@ -119,7 +134,9 @@ const showComicDetails = async(comicID) => {
     show("#comicDetail")
     hide("#characterDetail")
     cleanContainer("#results")
-    const comic = await requestData(definePath("comics" , comicID))
+    const path = definePath("comics" , comicID)
+    const comic = await requestData(path)
+    const total = await requestCount(path)
 
     $("#comicCover").src = `${comic[0].thumbnail.path}.${comic[0].thumbnail.extension}`
 
@@ -135,7 +152,9 @@ const showComicDetails = async(comicID) => {
     updateInfo("#comicDescription" , comic[0].description)
 
     updateInfo("#resultsTitle" , "Personajes")
-    printCharacters(getComicCharacters(comicID))
+    const characters = await getComicCharacters(comicID)
+    printCharacters(characters)
+    updateInfo(".resultsCount" , characters.length)
 }
 
 const showCharacterDetails = async(characterID) => {
@@ -152,12 +171,15 @@ const showCharacterDetails = async(characterID) => {
     updateInfo("#characterDescription" , character[0].description)
 
     updateInfo("#resultsTitle" , "Comics")
-    printComics(getCharacterComics(characterID))
+    const comics = await getCharacterComics(characterID)
+    printComics(comics)
+    updateInfo(".resultsCount" , comics.length)
 }
 
 
 const initialize = async() => {
     printComics(getComics())
+    getComicsTotal()
 }
 
 window.onload = initialize()

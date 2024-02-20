@@ -37,7 +37,33 @@ let ts = `ts=1`
 const publicKey = `&apikey=fce7b36328723d964caf6df4a1aa294c`
 const hash = `&hash=7391644ad1562b5dbed2616db50485d4`
 
-const defineResourceRequest = (resource , resourceID , plus) => {
+// Filters 
+
+const defineFilters = () => {
+    const search = $("#searchInput")
+    const type = $("#type")
+    const sortBy = $("#sortBy")
+
+    let filters = `?${ts}${publicKey}${hash}`
+
+    if (!search.value.length) {
+        return filters
+    }
+
+    if (type.value === "comics") {
+        filters += `&titleStartsWith=${search.value}`
+    }
+
+    if (type.value === "characters") {      
+        filters += `&nameStartsWith=${search.value}`
+    }
+
+    filters += `&orderBy=${sortBy.value}`
+
+    return filters 
+}
+
+const definePath = (resource , resourceID , plus) => {
     let baseURL = `${urlBase}${resource}`
 
     if (!resourceID && !plus) {
@@ -50,12 +76,8 @@ const defineResourceRequest = (resource , resourceID , plus) => {
     if (plus) {
         baseURL += `/${plus}`
     }
-    return baseURL
-}
 
-const definePath = (resource , resourceID , plus) => {
-    const request = defineResourceRequest(resource , resourceID , plus)
-    const url = `${request}?${ts}${publicKey}${hash}`
+    const url = baseURL += defineFilters()
     return url
 }
 
@@ -69,13 +91,11 @@ const requestData = async(url) => {
 
 const getComics = async() => {
     const comics = await requestData(definePath("comics"))
-    console.log(comics);
     return comics
 }
 
 const getComicCharacters = async(comicID) => {
     const comicCharacters = await requestData(definePath("comics" , comicID , "characters"))
-    console.log(comicCharacters)
     return comicCharacters
 }
 
@@ -177,11 +197,25 @@ const showCharacterDetails = async(characterID) => {
     updateInfo(".resultsCount" , comics.length)
 }
 
+const search = async(value) => {
+    if (value === "comics") {
+        cleanContainer("#results")
+        printComics(getComics())
+    }
+    if (value === "characters") {
+        cleanContainer("#results")
+        printCharacters(getCharacters())
+    }
+}
+
 // Initialilize
 
-const initialize = async() => {
+const initialize = () => {
     printComics(getComics())
     getComicsTotal()
+    $("#searchButton").addEventListener("click" , () => {
+        search($("#type").value)
+    })
 }
 
 window.onload = initialize()

@@ -7,7 +7,6 @@
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Bangers&display=swap" rel="stylesheet">
-    <script src="/script/main.js"></script>
     <script src="https://kit.fontawesome.com/937cff0016.js" crossorigin="anonymous"></script>
     <!-- SCRIPT DE TAILWIND CSS -->
     <script src="https://cdn.tailwindcss.com"></script>
@@ -37,7 +36,7 @@
                 <h2 class="mt-[10px] text-[35px] font-bold">Búsqueda</h2>
                 <div class="flex mt-[10px] border-b-[3px] border-black">
                     <i class="fa-solid fa-magnifying-glass self-center"></i>
-                    <input type="text" class="w-[95%] mb-[5px] ml-[10px] text-[1.5rem] focus:outline-none" placeholder="Ingresá tu búsqueda">
+                    <input type="text" class="w-[95%] mb-[5px] ml-[10px] text-[1.5rem] focus:outline-none" id="searchInput" placeholder="Ingresá tu búsqueda">
                 </div>
             </div>
 
@@ -51,16 +50,11 @@
                         <option value="characters">Personajes</option>
                     </select>
                     <label for="sort" class="text-[23px] font-bold text-slate-600 ">Orden</label>
-                    <select name="sort" id="sort" class="w-[75px]">
-                        <option value="name">A-Z</option>
-                        <option value="-name">Z-A</option>
-                        <option value="title">A-Z</option>
-                        <option value="-title">Z-A</option>
-                        <option value="-onsaleDate">Más nuevos</option>
-                        <option value="onsaleDate">Más viejos</option>
+                    <select name="sort" id="sortBy" class="w-[75px]">
+                        <!-- here will appear option -->
                     </select>
                 </div>
-                <button class="bg-black text-white px-[10px] hover:bg-red-600">BUSCAR</button>
+                <button class="bg-black text-white px-[10px] hover:bg-red-600" id="searchButton">BUSCAR</button>
             </div>
         </section>
 
@@ -109,5 +103,6 @@
     <footer class="flex bg-black justify-center fixed bottom-0 w-[100%] h-[75px]">
         <div class="self-center font-[Bangers] text-white text-[25px]">Hecho con ❤️ por Gaby</div>
     </footer>
+    <script src="/script/main.js"></script>
 </body>
 </html>

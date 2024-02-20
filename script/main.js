@@ -36,8 +36,43 @@ const urlBase = `http://gateway.marvel.com/v1/public/`
 let ts = `ts=1`
 const publicKey = `&apikey=fce7b36328723d964caf6df4a1aa294c`
 const hash = `&hash=7391644ad1562b5dbed2616db50485d4`
+let offset = 0
 
-const defineResourceRequest = (resource , resourceID , plus) => {
+
+// Filters 
+
+const defineFilters = (resource) => {
+    const search = $("#searchInput")
+    const type = $("#type")
+    const sortBy = $("#sortBy")
+
+    let filters = `?${ts}${publicKey}${hash}&offset=${offset}`
+
+    
+
+    if (!resource) {
+        return filters
+    }
+
+    filters += `&orderBy=${sortBy.value}`
+
+    if (!search.value.length) {
+        return filters
+    }
+
+    if (type.value === "comics") {
+        filters += `&titleStartsWith=${search.value}`
+    }
+
+    if (type.value === "characters") {      
+        filters += `&nameStartsWith=${search.value}`
+    }
+
+    return filters 
+}
+
+const definePath = (resource , resourceID , plus) => {
+    const simpleSearch = !resourceID && !plus
     let baseURL = `${urlBase}${resource}`
 
     if (!resourceID && !plus) {
@@ -50,14 +85,10 @@ const defineResourceRequest = (resource , resourceID , plus) => {
     if (plus) {
         baseURL += `/${plus}`
     }
-    return baseURL
+    return baseURL += defineFilters(simpleSearch)
 }
 
-const definePath = (resource , resourceID , plus) => {
-    const request = defineResourceRequest(resource , resourceID , plus)
-    const url = `${request}?${ts}${publicKey}${hash}`
-    return url
-}
+
 
 //API requests Results
 
@@ -69,13 +100,11 @@ const requestData = async(url) => {
 
 const getComics = async() => {
     const comics = await requestData(definePath("comics"))
-    console.log(comics);
     return comics
 }
 
 const getComicCharacters = async(comicID) => {
     const comicCharacters = await requestData(definePath("comics" , comicID , "characters"))
-    console.log(comicCharacters)
     return comicCharacters
 }
 
@@ -99,6 +128,12 @@ const requestCount = async(url) => {
 
 const getComicsTotal = async() => {
     const total = await requestCount(definePath("comics"))
+    updateInfo(".resultsCount" , total)
+    return total
+}
+
+const getCharactersTotal = async() => {
+    const total = await requestCount(definePath("characters"))
     updateInfo(".resultsCount" , total)
     return total
 }
@@ -134,10 +169,8 @@ const printCharacters = async(path) => {
 const showComicDetails = async(comicID) => {
     show("#comicDetail")
     hide("#characterDetail")
-    cleanContainer("#results")
     const path = definePath("comics" , comicID)
     const comic = await requestData(path)
-    const total = await requestCount(path)
 
     $("#comicCover").src = `${comic[0].thumbnail.path}.${comic[0].thumbnail.extension}`
 
@@ -153,6 +186,7 @@ const showComicDetails = async(comicID) => {
     updateInfo("#comicDescription" , comic[0].description)
 
     updateInfo("#resultsTitle" , "Personajes")
+    cleanContainer("#results")
     const characters = await getComicCharacters(comicID)
     printCharacters(characters)
     updateInfo(".resultsCount" , characters.length)
@@ -163,7 +197,6 @@ const showCharacterDetails = async(characterID) => {
     hide("#comicDetail")
     cleanContainer("#results")
     const character = await requestData(definePath("characters" , characterID))
-    console.log(character);
 
     $("#characterImage").src = `${character[0].thumbnail.path}.${character[0].thumbnail.extension}`
 
@@ -177,11 +210,58 @@ const showCharacterDetails = async(characterID) => {
     updateInfo(".resultsCount" , comics.length)
 }
 
+
+const search = () => {
+    const value = $("#type").value
+    updateInfo("#resultsTitle" , "Resultados")
+    cleanContainer("#results")
+
+    if (value === "comics") {
+        hide("#comicDetail")
+        hide("#characterDetail")
+        getComicsTotal()
+        printComics(requestData(definePath("comics")))
+    } else {
+        hide("#comicDetail")
+        hide("#characterDetail")
+        getCharactersTotal()
+        printCharacters(requestData(definePath("characters")))
+    }
+}
+
+const updateSorting = () => {
+    const value = $("#type").value
+
+    if (value === "comics") {
+        $("#sortBy").innerHTML = `
+            <option value="title">A-Z</option>
+            <option value="-title">Z-A</option>
+            <option value="-onsaleDate">Más nuevos</option>
+            <option value="onsaleDate">Más viejos</option>
+        `
+    }
+
+    if (value === "characters") {
+        $("#sortBy").innerHTML = `
+            <option value="name">A-Z</option>
+            <option value="-name">Z-A</option>
+        `
+    }
+}
+
 // Initialilize
 
-const initialize = async() => {
+const initialize = () => {
     printComics(getComics())
+    updateSorting()
     getComicsTotal()
+    $("#searchButton").addEventListener("click" , () => {
+        search()
+        console.log(search())
+    })
+    $("#type").addEventListener("click" , () => {
+        updateSorting()
+    })
 }
 
 window.onload = initialize()

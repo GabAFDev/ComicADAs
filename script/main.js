@@ -36,15 +36,23 @@ const urlBase = `http://gateway.marvel.com/v1/public/`
 let ts = `ts=1`
 const publicKey = `&apikey=fce7b36328723d964caf6df4a1aa294c`
 const hash = `&hash=7391644ad1562b5dbed2616db50485d4`
+let offset = 0
+
 
 // Filters 
 
-const defineFilters = () => {
+const defineFilters = (resource) => {
     const search = $("#searchInput")
     const type = $("#type")
     const sortBy = $("#sortBy")
 
-    let filters = `?${ts}${publicKey}${hash}`
+    let filters = `?${ts}${publicKey}${hash}&offset=${offset}`
+
+    filters += `&orderBy=${sortBy.value}`
+
+    if (!resource) {
+        return filters
+    }
 
     if (!search.value.length) {
         return filters
@@ -58,12 +66,11 @@ const defineFilters = () => {
         filters += `&nameStartsWith=${search.value}`
     }
 
-    filters += `&orderBy=${sortBy.value}`
-
     return filters 
 }
 
 const definePath = (resource , resourceID , plus) => {
+    const simpleSearch = !resourceID && !plus
     let baseURL = `${urlBase}${resource}`
 
     if (!resourceID && !plus) {
@@ -76,10 +83,10 @@ const definePath = (resource , resourceID , plus) => {
     if (plus) {
         baseURL += `/${plus}`
     }
-
-    const url = baseURL += defineFilters()
-    return url
+    return baseURL += defineFilters(simpleSearch)
 }
+
+
 
 //API requests Results
 
@@ -157,7 +164,6 @@ const showComicDetails = async(comicID) => {
     cleanContainer("#results")
     const path = definePath("comics" , comicID)
     const comic = await requestData(path)
-    const total = await requestCount(path)
 
     $("#comicCover").src = `${comic[0].thumbnail.path}.${comic[0].thumbnail.extension}`
 
@@ -183,7 +189,6 @@ const showCharacterDetails = async(characterID) => {
     hide("#comicDetail")
     cleanContainer("#results")
     const character = await requestData(definePath("characters" , characterID))
-    console.log(character);
 
     $("#characterImage").src = `${character[0].thumbnail.path}.${character[0].thumbnail.extension}`
 
@@ -197,24 +202,28 @@ const showCharacterDetails = async(characterID) => {
     updateInfo(".resultsCount" , comics.length)
 }
 
-const search = async(value) => {
+
+const search = () => {
+    const value = $("#type").value
+    updateInfo("#resultsTitle" , "Resultados")
+
     if (value === "comics") {
         cleanContainer("#results")
-        printComics(getComics())
-    }
-    if (value === "characters") {
+        getComicsTotal()
+        printComics(requestData(definePath("comics")))
+    } else {
         cleanContainer("#results")
-        printCharacters(getCharacters())
+        printCharacters(requestData(definePath("characters")))
     }
 }
 
 // Initialilize
 
 const initialize = () => {
-    printComics(getComics())
+    printComics(requestData(definePath("comics")))
     getComicsTotal()
     $("#searchButton").addEventListener("click" , () => {
-        search($("#type").value)
+        search()
     })
 }
 

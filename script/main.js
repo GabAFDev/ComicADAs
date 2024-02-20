@@ -48,11 +48,13 @@ const defineFilters = (resource) => {
 
     let filters = `?${ts}${publicKey}${hash}&offset=${offset}`
 
-    filters += `&orderBy=${sortBy.value}`
+    
 
     if (!resource) {
         return filters
     }
+
+    filters += `&orderBy=${sortBy.value}`
 
     if (!search.value.length) {
         return filters
@@ -130,6 +132,12 @@ const getComicsTotal = async() => {
     return total
 }
 
+const getCharactersTotal = async() => {
+    const total = await requestCount(definePath("characters"))
+    updateInfo(".resultsCount" , total)
+    return total
+}
+
 // printers
 
 const printComics = async(path) => {
@@ -161,7 +169,6 @@ const printCharacters = async(path) => {
 const showComicDetails = async(comicID) => {
     show("#comicDetail")
     hide("#characterDetail")
-    cleanContainer("#results")
     const path = definePath("comics" , comicID)
     const comic = await requestData(path)
 
@@ -179,6 +186,7 @@ const showComicDetails = async(comicID) => {
     updateInfo("#comicDescription" , comic[0].description)
 
     updateInfo("#resultsTitle" , "Personajes")
+    cleanContainer("#results")
     const characters = await getComicCharacters(comicID)
     printCharacters(characters)
     updateInfo(".resultsCount" , characters.length)
@@ -206,24 +214,53 @@ const showCharacterDetails = async(characterID) => {
 const search = () => {
     const value = $("#type").value
     updateInfo("#resultsTitle" , "Resultados")
+    cleanContainer("#results")
 
     if (value === "comics") {
-        cleanContainer("#results")
+        hide("#comicDetail")
+        hide("#characterDetail")
         getComicsTotal()
         printComics(requestData(definePath("comics")))
     } else {
-        cleanContainer("#results")
+        hide("#comicDetail")
+        hide("#characterDetail")
+        getCharactersTotal()
         printCharacters(requestData(definePath("characters")))
+    }
+}
+
+const updateSorting = () => {
+    const value = $("#type").value
+
+    if (value === "comics") {
+        $("#sortBy").innerHTML = `
+            <option value="title">A-Z</option>
+            <option value="-title">Z-A</option>
+            <option value="-onsaleDate">Más nuevos</option>
+            <option value="onsaleDate">Más viejos</option>
+        `
+    }
+
+    if (value === "characters") {
+        $("#sortBy").innerHTML = `
+            <option value="name">A-Z</option>
+            <option value="-name">Z-A</option>
+        `
     }
 }
 
 // Initialilize
 
 const initialize = () => {
-    printComics(requestData(definePath("comics")))
+    printComics(getComics())
+    updateSorting()
     getComicsTotal()
     $("#searchButton").addEventListener("click" , () => {
         search()
+        console.log(search())
+    })
+    $("#type").addEventListener("click" , () => {
+        updateSorting()
     })
 }
 

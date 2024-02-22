@@ -28,11 +28,17 @@ const cleanContainer = (selector) => $(selector).innerHTML = ""
 
 const updateInfo = (selector , text) => $(selector).innerText = `${text}`
 
+// Total counter
+
 let total = 0
 
 const updateTotal = (count) => {
     $(".resultsCount").innerText = count
     total = count
+}
+
+const resetOffset = () => {
+    offset = 0
 }
 
 // ---------------------- API ----------------------//
@@ -110,9 +116,19 @@ const getComics = async() => {
     return comics
 }
 
+const getComicCharacters = async(comicID) => {
+    const comicCharacters = await requestData(definePath("comics" , comicID , "characters"))
+    return comicCharacters
+}
+
 const getCharacters = async() => {
     const characters = await requestData(definePath("characters"))
     return characters
+}
+
+const getCharacterComics = async(characterID) => {
+    const characterComics = await requestData(definePath("characters" , characterID , "comics"))
+    return characterComics
 }
 
 //API requests Totals
@@ -183,14 +199,18 @@ const showComicDetails = async(comicID) => {
     )
     updateInfo("#comicDescription" , comic[0].description)
 
+    resetOffset()
     const characters = await requestData(definePath("comics" , comicID , "characters"))
     const total = await requestCount(definePath("comics" , comicID , "characters"))
+    console.log(total);
 
-    updateTotal(total)
-    updatePagination(total)
     updateInfo("#resultsTitle" , "Personajes")
     cleanContainer("#results")
+    console.log(offset);
+    updateTotal(total)
     printCharacters(characters)
+    pagination(async() => printCharacters(await getComicCharacters(comicID)))
+    updatePagination(total)
 }
 
 const showCharacterDetails = async(characterID) => {
@@ -204,15 +224,18 @@ const showCharacterDetails = async(characterID) => {
 
     updateInfo("#characterDescription" , character[0].description)
 
-    
+    resetOffset()
     const comics = await requestData(definePath("characters" , characterID , "comics"))
-    // console.log(definePath("characters" , characterID , "comics"));
     const total = await requestCount(definePath("characters" , characterID , "comics"))
-    updateTotal(total)
-    updatePagination(total)
+    console.log(total);
+    console.log(offset);
+
     updateInfo("#resultsTitle" , "Comics")
     cleanContainer("#results")
+    updateTotal(total)
     printComics(comics)
+    pagination(() => printComics(getCharacterComics(characterID)))
+    updatePagination(total)
 }
 
 // Search and defining sort by 
@@ -252,35 +275,49 @@ const updateSorting = () => {
 
 // Pagination
 
-const firstPage = () => {
-    offset = 0
-    search()
-}
-
-const nextPage = () => {
-    offset += 20
-    search()
-}
-
-const previousPage = () => {
-    offset -= 20
-    if (offset < 0) {
+const pagination = (searchPath) => {
+    $("#first").onclick = () => {
+        cleanContainer("#results")
         offset = 0
+        searchPath()
+        updatePagination(total)
     }
-    search()
+
+    $("#previous").onclick = () => {
+        cleanContainer("#results")
+        offset -= 20
+        if (offset < 0) {
+            offset = 0
+        }
+        searchPath()
+        updatePagination(total)
+    }
+
+    $("#next").onclick = () => {
+        cleanContainer("#results")
+        offset += 20
+        searchPath()
+        console.log(offset);
+        updatePagination(total)
+    }
+
+    $("#last").onclick = () => {
+        cleanContainer("#results")
+        const pages = Math.floor(total / 20)
+        offset = (total % 20 ===0)? pages -1 : pages * 20
+        searchPath()
+        updatePagination(total)
+    }
 }
 
-const lastPage = () => {
-    const pages = Math.floor(total / 20)
-    offset = (total % 20 ===0)? pages -1 : pages * 20
-    search()
-}
 
 const updatePagination = (total) => {
+    console.log(offset);
     if (offset === 0) {
         $("#first").disabled = true
         $("#previous").disabled = true
-    } else {
+    } 
+    if (offset > 0) {
         $("#first").disabled = false
         $("#previous").disabled = false
     }
@@ -300,6 +337,7 @@ const initialize = async() => {
     updateSorting()
     updateTotal(await getComicsTotal())
     updatePagination()
+    pagination(search)
 
     $("#searchButton").addEventListener("click" , () => {
         updateInfo("#resultsTitle" , "Resultados")
@@ -307,31 +345,11 @@ const initialize = async() => {
         hide("#characterDetail")
         offset = 0
         search()
+        pagination(search)
     })
 
     $("#type").addEventListener("click" , () => {
         updateSorting()
     })
-
-    $("#first").addEventListener("click" , () => {
-        firstPage()
-        updatePagination(total)
-    })
-
-    $("#previous").addEventListener("click" , () => {
-        previousPage()
-        updatePagination(total)
-    })
-
-    $("#next").addEventListener("click" , () => {
-        nextPage()
-        updatePagination(total)
-    })
-
-    $("#last").addEventListener("click" , () => {
-        lastPage()
-        updatePagination(total)
-    })
 }
-
 window.onload = initialize()

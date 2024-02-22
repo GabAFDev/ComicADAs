@@ -28,6 +28,13 @@ const cleanContainer = (selector) => $(selector).innerHTML = ""
 
 const updateInfo = (selector , text) => $(selector).innerText = `${text}`
 
+let total = 0
+
+const updateTotal = (count) => {
+    $(".resultsCount").innerText = count
+    total = count
+}
+
 // ---------------------- API ----------------------//
 
 // API url definition 
@@ -37,7 +44,6 @@ let ts = `ts=1`
 const publicKey = `&apikey=fce7b36328723d964caf6df4a1aa294c`
 const hash = `&hash=7391644ad1562b5dbed2616db50485d4`
 let offset = 0
-let total = 0
 
 
 // Filters 
@@ -124,19 +130,18 @@ const getCharacterComics = async(characterID) => {
 const requestCount = async(url) => {
     const response = await fetch(url)
     const data = await response.json()
-    total =  data.data.total
-    return total
+    return data.data.total
 }
 
 const getComicsTotal = async() => {
     const total = await requestCount(definePath("comics"))
-    updateInfo(".resultsCount" , total)
+    updateTotal(total)
     return total
 }
 
 const getCharactersTotal = async() => {
     const total = await requestCount(definePath("characters"))
-    updateInfo(".resultsCount" , total)
+    updateTotal(total)
     return total
 }
 
@@ -171,6 +176,7 @@ const printCharacters = async(path) => {
 const showComicDetails = async(comicID) => {
     show("#comicDetail")
     hide("#characterDetail")
+
     const path = definePath("comics" , comicID)
     const comic = await requestData(path)
 
@@ -191,8 +197,9 @@ const showComicDetails = async(comicID) => {
     cleanContainer("#results")
     const characters = await getComicCharacters(comicID)
     printCharacters(characters)
-    total = characters.length
-    updateInfo(".resultsCount" , total)
+    const total = characters.length
+    updateTotal(total)
+    updatePagination(total)
 }
 
 const showCharacterDetails = async(characterID) => {
@@ -210,8 +217,9 @@ const showCharacterDetails = async(characterID) => {
     updateInfo("#resultsTitle" , "Comics")
     const comics = await getCharacterComics(characterID)
     printComics(comics)
-    total = comics.length
-    updateInfo(".resultsCount" , total)
+    const total = comics.length
+    updateTotal(total)
+    updatePagination(total)
 }
 
 // Search and defining sort by 
@@ -274,12 +282,31 @@ const lastPage = () => {
     search()
 }
 
+const updatePagination = (total) => {
+    if (offset === 0) {
+        $("#first").disabled = true
+        $("#previous").disabled = true
+    } else {
+        $("#first").disabled = false
+        $("#previous").disabled = false
+    }
+    if ((offset + 20) >= total) {
+        $("#last").disabled = true
+        $("#next").disabled = true
+    } else {
+        $("#last").disabled = false
+        $("#next").disabled = false
+    }
+}
+
 // Initialilize
 
-const initialize = () => {
+const initialize = async() => {
     printComics(getComics())
     updateSorting()
-    getComicsTotal()
+    updateTotal(await getComicsTotal())
+    updatePagination()
+
     $("#searchButton").addEventListener("click" , () => {
         updateInfo("#resultsTitle" , "Resultados")
         hide("#comicDetail")
@@ -287,20 +314,29 @@ const initialize = () => {
         offset = 0
         search()
     })
+
     $("#type").addEventListener("click" , () => {
         updateSorting()
     })
+
     $("#first").addEventListener("click" , () => {
         firstPage()
+        updatePagination()
     })
+
     $("#previous").addEventListener("click" , () => {
         previousPage()
+        updatePagination()
     })
+
     $("#next").addEventListener("click" , () => {
         nextPage()
+        updatePagination()
     })
+
     $("#last").addEventListener("click" , () => {
         lastPage()
+        updatePagination()
     })
 }
 

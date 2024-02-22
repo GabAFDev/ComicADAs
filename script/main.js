@@ -184,7 +184,7 @@ const showComicDetails = async(comicID) => {
     updateInfo("#comicDescription" , comic[0].description)
 
     const characters = await requestData(definePath("comics" , comicID , "characters"))
-    const total = characters.length
+    const total = await requestCount(definePath("comics" , comicID , "characters"))
 
     updateTotal(total)
     updatePagination(total)
@@ -206,7 +206,8 @@ const showCharacterDetails = async(characterID) => {
 
     
     const comics = await requestData(definePath("characters" , characterID , "comics"))
-    const total = comics.length
+    // console.log(definePath("characters" , characterID , "comics"));
+    const total = await requestCount(definePath("characters" , characterID , "comics"))
     updateTotal(total)
     updatePagination(total)
     updateInfo("#resultsTitle" , "Comics")

@@ -51,7 +51,7 @@
                     </select>
                     <label for="sort" class="text-[23px] font-bold text-slate-600 ">Orden</label>
                     <select name="sort" id="sortBy" class="w-[75px]">
-                        <!-- here will appear option -->
+                        <!-- here will appear options -->
                     </select>
                 </div>
                 <button class="bg-black text-white px-[10px] hover:bg-red-600" id="searchButton">BUSCAR</button>
@@ -92,10 +92,10 @@
                 <!-- this place will show search results -->
             </div>
             <div class="flex justify-center my-[15px]">
-                <button class="bg-black text-white text-[30px] p-[10px] px-[20px] m-[3px] hover:bg-red-600 disabled:opacity-75" disabled><i class="fa-solid fa-angles-left"></i></button>
-                <button class="bg-black text-white text-[30px] p-[10px] px-[20px] m-[3px] hover:bg-red-600 disabled:opacity-75" disabled><i class="fa-solid fa-angle-left"></i></button>
-                <button class="bg-black text-white text-[30px] p-[10px] px-[20px] m-[3px] hover:bg-red-600 disabled:opacity-75"><i class="fa-solid fa-angle-right"></i></button>
-                <button class="bg-black text-white text-[30px] p-[10px] px-[20px] m-[3px] hover:bg-red-600 disabled:opacity-75"><i class="fa-solid fa-angles-right"></i></button>
+                <button class="bg-black text-white text-[30px] p-[10px] px-[20px] m-[3px] hover:bg-red-600 disabled:opacity-75" id="first" disabled><i class="fa-solid fa-angles-left"></i></button>
+                <button class="bg-black text-white text-[30px] p-[10px] px-[20px] m-[3px] hover:bg-red-600 disabled:opacity-75" id="previous" disabled><i class="fa-solid fa-angle-left"></i></button>
+                <button class="bg-black text-white text-[30px] p-[10px] px-[20px] m-[3px] hover:bg-red-600 disabled:opacity-75" id="next" disabled><i class="fa-solid fa-angle-right"></i></button>
+                <button class="bg-black text-white text-[30px] p-[10px] px-[20px] m-[3px] hover:bg-red-600 disabled:opacity-75" id="last" disabled><i class="fa-solid fa-angles-right"></i></button>
             </div>
         </section>
 

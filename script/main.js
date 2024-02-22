@@ -218,17 +218,11 @@ const showCharacterDetails = async(characterID) => {
 
 const search = () => {
     const value = $("#type").value
-    updateInfo("#resultsTitle" , "Resultados")
     cleanContainer("#results")
-
     if (value === "comics") {
-        hide("#comicDetail")
-        hide("#characterDetail")
         getComicsTotal()
         printComics(requestData(definePath("comics")))
     } else {
-        hide("#comicDetail")
-        hide("#characterDetail")
         getCharactersTotal()
         printCharacters(requestData(definePath("characters")))
     }
@@ -258,10 +252,12 @@ const updateSorting = () => {
 
 const firstPage = () => {
     offset = 0
+    search()
 }
 
 const nextPage = () => {
     offset += 20
+    search()
 }
 
 const previousPage = () => {
@@ -269,11 +265,13 @@ const previousPage = () => {
     if (offset < 0) {
         offset = 0
     }
+    search()
 }
 
 const lastPage = () => {
     const pages = Math.floor(total / 20)
     offset = (total % 20 ===0)? pages -1 : pages * 20
+    search()
 }
 
 // Initialilize
@@ -283,8 +281,11 @@ const initialize = () => {
     updateSorting()
     getComicsTotal()
     $("#searchButton").addEventListener("click" , () => {
+        updateInfo("#resultsTitle" , "Resultados")
+        hide("#comicDetail")
+        hide("#characterDetail")
+        offset = 0
         search()
-        console.log(search())
     })
     $("#type").addEventListener("click" , () => {
         updateSorting()

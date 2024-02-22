@@ -37,6 +37,7 @@ let ts = `ts=1`
 const publicKey = `&apikey=fce7b36328723d964caf6df4a1aa294c`
 const hash = `&hash=7391644ad1562b5dbed2616db50485d4`
 let offset = 0
+let total = 0
 
 
 // Filters 
@@ -123,7 +124,8 @@ const getCharacterComics = async(characterID) => {
 const requestCount = async(url) => {
     const response = await fetch(url)
     const data = await response.json()
-    return data.data.total
+    total =  data.data.total
+    return total
 }
 
 const getComicsTotal = async() => {
@@ -189,7 +191,8 @@ const showComicDetails = async(comicID) => {
     cleanContainer("#results")
     const characters = await getComicCharacters(comicID)
     printCharacters(characters)
-    updateInfo(".resultsCount" , characters.length)
+    total = characters.length
+    updateInfo(".resultsCount" , total)
 }
 
 const showCharacterDetails = async(characterID) => {
@@ -207,9 +210,11 @@ const showCharacterDetails = async(characterID) => {
     updateInfo("#resultsTitle" , "Comics")
     const comics = await getCharacterComics(characterID)
     printComics(comics)
-    updateInfo(".resultsCount" , comics.length)
+    total = comics.length
+    updateInfo(".resultsCount" , total)
 }
 
+// Search and defining sort by 
 
 const search = () => {
     const value = $("#type").value
@@ -249,6 +254,28 @@ const updateSorting = () => {
     }
 }
 
+// Pagination
+
+const firstPage = () => {
+    offset = 0
+}
+
+const nextPage = () => {
+    offset += 20
+}
+
+const previousPage = () => {
+    offset -= 20
+    if (offset < 0) {
+        offset = 0
+    }
+}
+
+const lastPage = () => {
+    const pages = Math.floor(total / 20)
+    offset = (total % 20 ===0)? pages -1 : pages * 20
+}
+
 // Initialilize
 
 const initialize = () => {
@@ -261,6 +288,18 @@ const initialize = () => {
     })
     $("#type").addEventListener("click" , () => {
         updateSorting()
+    })
+    $("#first").addEventListener("click" , () => {
+        firstPage()
+    })
+    $("#previous").addEventListener("click" , () => {
+        previousPage()
+    })
+    $("#next").addEventListener("click" , () => {
+        nextPage()
+    })
+    $("#last").addEventListener("click" , () => {
+        lastPage()
     })
 }
 

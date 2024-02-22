@@ -15,15 +15,15 @@
 <body>
     <header>
         <div class="flex bg-red-600 justify-center">
-            <h1 class="self-center font-[Bangers] text-white text-[70px]">ADA COMICS</h1>
+            <h1 class="self-center font-[Bangers] text-white text-[60px]">ADA COMICS</h1>
         </div>
     </header>
-    <main class="mb-[75px]">
+    <main class="mb-[25px]">
 
         <!-- Cover image -->
 
         <section>
-            <img src="resources/frontpageimg.jpg" class="h-[35vh] w-[100vw] object-cover" alt="">
+            <img src="resources/frontpageimg.jpg" class="min-h-[35vh] w-[100vw] object-cover md:max-h-[65vh]" alt="">
         </section>
 
         <!-- Search engine -->
@@ -86,12 +86,12 @@
         <!-- Results section -->
 
         <section class="mx-[10px] px-[4%] screen">
-            <h2 id="resultsTitle" class="mt-[30px] text-[35px] font-bold">Resultados</h2>
-            <p class="font-bold text-slate-600"><span class="resultsCount">0</span> RESULTADOS</p>
-            <div class="grid grid-cols-5 gap-4" id="results">
+            <h2 id="resultsTitle" class="mt-[30px] mb-[1rem] text-[35px] font-bold">Resultados</h2>
+            <p class="font-bold text-slate-600 mb-[1rem]"><span class="resultsCount">0</span> RESULTADOS</p>
+            <div class="grid grid-cols-5 gap-4 mb-[80px]" id="results">
                 <!-- this place will show search results -->
             </div>
-            <div class="flex justify-center my-[15px]">
+            <div class="flex justify-center mb-[10px]">
                 <button class="bg-black text-white text-[30px] p-[10px] px-[20px] m-[3px] hover:bg-red-600 disabled:opacity-75" id="first" disabled><i class="fa-solid fa-angles-left"></i></button>
                 <button class="bg-black text-white text-[30px] p-[10px] px-[20px] m-[3px] hover:bg-red-600 disabled:opacity-75" id="previous" disabled><i class="fa-solid fa-angle-left"></i></button>
                 <button class="bg-black text-white text-[30px] p-[10px] px-[20px] m-[3px] hover:bg-red-600 disabled:opacity-75" id="next" disabled><i class="fa-solid fa-angle-right"></i></button>
@@ -100,7 +100,7 @@
         </section>
 
     </main>
-    <footer class="flex bg-black justify-center fixed bottom-0 w-[100%] h-[75px]">
+    <footer class="flex bg-black justify-center bottom-0 w-[100%] h-[75px]">
         <div class="self-center font-[Bangers] text-white text-[25px]">Hecho con ❤️ por Gaby</div>
     </footer>
     <script src="/script/main.js"></script>

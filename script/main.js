@@ -157,8 +157,8 @@ const printComics = async(path) => {
     const comics = await path
     for (let comic of comics) {
         $("#results").innerHTML += `
-        <div onclick= "showComicDetails(${comic.id})">
-            <img src="${comic.thumbnail.path}/portrait_uncanny.${comic.thumbnail.extension}" alt="" class="mt-[5 px]">
+        <div onclick= "showComicDetails(${comic.id})" class="hover:text-red-600">
+            <img src="${comic.thumbnail.path}/portrait_uncanny.${comic.thumbnail.extension}" alt="" class="mt-[10 px] drop-shadow-2xl hover:-translate-y-3 hover:transition hover:aduration-250">
             <p class="font-bold mt-[15px]">${comic.title}</p>
         </div>
         `
@@ -170,8 +170,8 @@ const printCharacters = async(path) => {
     for (let character of characters) {
         $("#results").innerHTML += `
         <div onclick= "showCharacterDetails(${character.id})">
-            <img src="${character.thumbnail.path}/portrait_uncanny.${character.thumbnail.extension}" alt="" class="mt-[5 px]">
-            <p class="font-bold text-white bg-red-700">${character.name}</p>
+            <img src="${character.thumbnail.path}/portrait_uncanny.${character.thumbnail.extension}" alt="" class="w-[100%] mt-[5 px] ">
+            <p class="font-bold text-white bg-black min-h-[4rem]">${character.name}</p>
         </div>
         `
     }

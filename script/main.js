@@ -110,19 +110,9 @@ const getComics = async() => {
     return comics
 }
 
-const getComicCharacters = async(comicID) => {
-    const comicCharacters = await requestData(definePath("comics" , comicID , "characters"))
-    return comicCharacters
-}
-
 const getCharacters = async() => {
     const characters = await requestData(definePath("characters"))
     return characters
-}
-
-const getCharacterComics = async(characterID) => {
-    const characterComics = await requestData(definePath("characters" , characterID , "comics"))
-    return characterComics
 }
 
 //API requests Totals
@@ -193,19 +183,19 @@ const showComicDetails = async(comicID) => {
     )
     updateInfo("#comicDescription" , comic[0].description)
 
-    updateInfo("#resultsTitle" , "Personajes")
-    cleanContainer("#results")
-    const characters = await getComicCharacters(comicID)
-    printCharacters(characters)
+    const characters = await requestData(definePath("comics" , comicID , "characters"))
     const total = characters.length
+
     updateTotal(total)
     updatePagination(total)
+    updateInfo("#resultsTitle" , "Personajes")
+    cleanContainer("#results")
+    printCharacters(characters)
 }
 
 const showCharacterDetails = async(characterID) => {
     show("#characterDetail")
     hide("#comicDetail")
-    cleanContainer("#results")
     const character = await requestData(definePath("characters" , characterID))
 
     $("#characterImage").src = `${character[0].thumbnail.path}.${character[0].thumbnail.extension}`
@@ -214,26 +204,29 @@ const showCharacterDetails = async(characterID) => {
 
     updateInfo("#characterDescription" , character[0].description)
 
-    updateInfo("#resultsTitle" , "Comics")
-    const comics = await getCharacterComics(characterID)
-    printComics(comics)
+    
+    const comics = await requestData(definePath("characters" , characterID , "comics"))
     const total = comics.length
     updateTotal(total)
     updatePagination(total)
+    updateInfo("#resultsTitle" , "Comics")
+    cleanContainer("#results")
+    printComics(comics)
 }
 
 // Search and defining sort by 
 
-const search = () => {
+const search = async() => {
     const value = $("#type").value
     cleanContainer("#results")
     if (value === "comics") {
-        getComicsTotal()
+        total = await getComicsTotal()
         printComics(requestData(definePath("comics")))
     } else {
-        getCharactersTotal()
+        total = await getCharactersTotal()
         printCharacters(requestData(definePath("characters")))
     }
+    updatePagination(total)
 }
 
 const updateSorting = () => {
@@ -321,22 +314,22 @@ const initialize = async() => {
 
     $("#first").addEventListener("click" , () => {
         firstPage()
-        updatePagination()
+        updatePagination(total)
     })
 
     $("#previous").addEventListener("click" , () => {
         previousPage()
-        updatePagination()
+        updatePagination(total)
     })
 
     $("#next").addEventListener("click" , () => {
         nextPage()
-        updatePagination()
+        updatePagination(total)
     })
 
     $("#last").addEventListener("click" , () => {
         lastPage()
-        updatePagination()
+        updatePagination(total)
     })
 }
 

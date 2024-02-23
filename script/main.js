@@ -345,7 +345,7 @@ const updatePagination = (total) => {
 // Initialilize
 
 const initialize = async() => {
-    printComics(getComics())
+    printComics(await getComics())
     updateSorting()
     updateTotal(await getComicsTotal())
     updatePagination()

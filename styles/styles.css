@@ -10,7 +10,6 @@
 }
 
 .loader {
-    display: inline-block;
     border-radius: 50%;
     border: 10px solid #f3f3f3;
     border-top: 10px solid #e0131d;

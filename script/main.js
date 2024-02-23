@@ -24,6 +24,7 @@ const hide = (selector) => $(`${selector}`).classList.add('hidden')
 // cleaner //
 
 const cleanContainer = (selector) => $(selector).innerHTML = ""
+
 // Text updater
 
 const updateInfo = (selector , text) => $(selector).innerText = `${text}`
@@ -113,6 +114,7 @@ const requestData = async(url) => {
 
 const getComics = async() => {
     const comics = await requestData(definePath("comics"))
+    hide(".loader-container")
     return comics
 }
 
@@ -123,6 +125,7 @@ const getComicCharacters = async(comicID) => {
 
 const getCharacters = async() => {
     const characters = await requestData(definePath("characters"))
+    hide(".loader-container")
     return characters
 }
 
@@ -154,32 +157,37 @@ const getCharactersTotal = async() => {
 // printers
 
 const printComics = async(path) => {
+    show(".loader-container")
     const comics = await path
     for (let comic of comics) {
         $("#results").innerHTML += `
-        <div onclick= "showComicDetails(${comic.id})">
-            <img src="${comic.thumbnail.path}/portrait_uncanny.${comic.thumbnail.extension}" alt="" class="mt-[5 px]">
-            <p class="font-bold mt-[15px]">${comic.title}</p>
+        <div onclick= "showComicDetails(${comic.id})" class="hover:text-red-600">
+            <img src="${comic.thumbnail.path}/portrait_uncanny.${comic.thumbnail.extension}" alt="" class="mt-[10 px] drop-shadow-2xl hover:-translate-y-3 hover:transition hover:aduration-250">
+            <p class="font-bold mt-[15px] px-[5px]">${comic.title}</p>
         </div>
         `
     }
+    hide(".loader-container")
 }
 
 const printCharacters = async(path) => {
+    show(".loader-container")
     const characters = await path
     for (let character of characters) {
         $("#results").innerHTML += `
-        <div onclick= "showCharacterDetails(${character.id})">
-            <img src="${character.thumbnail.path}/portrait_uncanny.${character.thumbnail.extension}" alt="" class="mt-[5 px]">
-            <p class="font-bold text-white bg-red-700">${character.name}</p>
+        <div onclick= "showCharacterDetails(${character.id})" class="bg-black hover:bg-red-600 overflow-hidden">
+            <img src="${character.thumbnail.path}/portrait_uncanny.${character.thumbnail.extension}" alt="" class="w-[100%] mt-[5 px] hover:scale-110">
+            <p class="font-bold text-white text-center min-h-[105px] border-t-4 border-red-600 pt-[25px] px-[5px]">${character.name}</p>
         </div>
         `
     }
+    hide(".loader-container")
 }
 
 // Showing details
 
 const showComicDetails = async(comicID) => {
+    show(".loader-container")
     show("#comicDetail")
     hide("#characterDetail")
 
@@ -202,7 +210,6 @@ const showComicDetails = async(comicID) => {
     resetOffset()
     const characters = await requestData(definePath("comics" , comicID , "characters"))
     const total = await requestCount(definePath("comics" , comicID , "characters"))
-    console.log(total);
 
     updateInfo("#resultsTitle" , "Personajes")
     cleanContainer("#results")
@@ -211,9 +218,11 @@ const showComicDetails = async(comicID) => {
     printCharacters(characters)
     pagination(async() => printCharacters(await getComicCharacters(comicID)))
     updatePagination(total)
+    hide(".loader-container")
 }
 
 const showCharacterDetails = async(characterID) => {
+    show(".loader-container")
     show("#characterDetail")
     hide("#comicDetail")
     const character = await requestData(definePath("characters" , characterID))
@@ -236,11 +245,13 @@ const showCharacterDetails = async(characterID) => {
     printComics(comics)
     pagination(() => printComics(getCharacterComics(characterID)))
     updatePagination(total)
+    hide(".loader-container")
 }
 
 // Search and defining sort by 
 
 const search = async() => {
+    show(".loader-container")
     const value = $("#type").value
     cleanContainer("#results")
     if (value === "comics") {
@@ -251,6 +262,7 @@ const search = async() => {
         printCharacters(requestData(definePath("characters")))
     }
     updatePagination(total)
+    hide(".loader-container")
 }
 
 const updateSorting = () => {
@@ -333,7 +345,7 @@ const updatePagination = (total) => {
 // Initialilize
 
 const initialize = async() => {
-    printComics(getComics())
+    printComics(await getComics())
     updateSorting()
     updateTotal(await getComicsTotal())
     updatePagination()

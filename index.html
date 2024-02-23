@@ -28,13 +28,13 @@
 
         <!-- Search engine -->
 
-        <section class="mx-[10px] px-[4%]">
+        <section class="px-[30px] lg:grid lg:grid-cols-2">
 
             <!-- Search -->
 
-            <div class="">
+            <div class="lg:w-[100%]">
                 <h2 class="mt-[10px] text-[35px] font-bold">Búsqueda</h2>
-                <div class="flex mt-[10px] border-b-[3px] border-black">
+                <div class="flex mt-[10px] border-b-[3px] border-black lg:w-[100%]">
                     <i class="fa-solid fa-magnifying-glass self-center"></i>
                     <input type="text" class="w-[95%] mb-[5px] ml-[10px] text-[1.5rem] focus:outline-none" id="searchInput" placeholder="Ingresá tu búsqueda">
                 </div>
@@ -42,15 +42,15 @@
 
             <!-- Filters -->
 
-            <div class="flex mt-[15px]">
-                <div>
+            <div class="flex mt-[35px] lg:w-[100%] lg:mt-[75px] lg:ml-[15px]">
+                <div class="w-[100%]">
                     <label for="type" class="text-[23px] font-bold text-slate-600">Tipo</label>
-                    <select name="type" id="type" class="w-[85px]">
+                    <select name="type" id="type" class="w-[30%] text-[20px] font-bold text-black text-center ml-[5px]">
                         <option value="comics">Comics</option>
                         <option value="characters">Personajes</option>
                     </select>
-                    <label for="sort" class="text-[23px] font-bold text-slate-600 ">Orden</label>
-                    <select name="sort" id="sortBy" class="w-[75px]">
+                    <label for="sort" class="text-[23px] font-bold text-slate-600">Orden</label>
+                    <select name="sort" id="sortBy" class="w-[30%] text-[20px] font-bold text-black text-center ml-[5px]">
                         <!-- here will appear options -->
                     </select>
                 </div>
@@ -60,7 +60,7 @@
 
         <!-- Comic section -->
 
-        <section class="hidden flex mx-[10px] px-[4%] max-sm:flex-col screen" id="comicDetail">
+        <section class="hidden flex px-[30px] max-sm:flex-col screen" id="comicDetail">
             <img src="" alt="" id="comicCover" class="mt-[75px] max-w-[350px] ">
             <div class="mb-[15px] mt-[75px] ml-[30px] max-sm:px-[0] max-sm:ml-[0px]">
                 <h2 id="comicTitle"  class="mt-[15px] font-bold text-[2rem]"></h2>
@@ -75,7 +75,7 @@
 
         <!-- Character section -->
 
-        <section class="hidden flex mx-[10px] px-[5%] max-sm:flex-col screen" id="characterDetail">
+        <section class="hidden flex px-[30px] max-sm:flex-col screen" id="characterDetail">
             <img src="" alt="" id="characterImage" class="mt-[75px] max-w-[350px]">
             <div class="mb-[15px] mt-[75px] ml-[30px] max-sm:px-[0] max-sm:ml-[0px]">
                 <h2 id="characterName"  class="mt-[15px] font-bold text-[2rem]"></h2>
@@ -85,9 +85,10 @@
 
         <!-- Results section -->
 
-        <section class="mx-[10px] px-[4%] screen">
+        <section class="px-[30px] screen">
             <h2 id="resultsTitle" class="mt-[30px] mb-[1rem] text-[35px] font-bold">Resultados</h2>
             <p class="font-bold text-slate-600 mb-[1rem]"><span class="resultsCount">0</span> RESULTADOS</p>
+
             <div class="grid grid-cols-5 gap-8 mb-[140px]" id="results">
                 <!-- this place will show search results -->
             </div>
@@ -100,6 +101,10 @@
         </section>
 
     </main>
+    <!-- loader -->
+    <div class="loader-container hidden">
+        <div class="loader animate-spin h-5 w-5 mr-3 items-center"></div>
+    </div>
     <footer class="flex bg-black justify-center bottom-0 w-[100%] h-[75px]">
         <div class="self-center font-[Bangers] text-white text-[25px]">Hecho con ❤️ por Gaby</div>
     </footer>

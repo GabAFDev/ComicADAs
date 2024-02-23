@@ -169,9 +169,9 @@ const printCharacters = async(path) => {
     const characters = await path
     for (let character of characters) {
         $("#results").innerHTML += `
-        <div onclick= "showCharacterDetails(${character.id})" class="hover:bg-red-500">
-            <img src="${character.thumbnail.path}/portrait_uncanny.${character.thumbnail.extension}" alt="" class="w-[100%] mt-[5 px] ">
-            <p class="font-bold text-white bg-black min-h-[4rem] border-t-4 border-red-600 ">${character.name}</p>
+        <div onclick= "showCharacterDetails(${character.id})" class="bg-black hover:bg-red-600 overflow-hidden">
+            <img src="${character.thumbnail.path}/portrait_uncanny.${character.thumbnail.extension}" alt="" class="w-[100%] mt-[5 px] hover:scale-110">
+            <p class="font-bold text-white text-center min-h-[105px] border-t-4 border-red-600 pt-[20px]">${character.name}</p>
         </div>
         `
     }

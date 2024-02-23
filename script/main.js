@@ -173,6 +173,9 @@ const printComics = async(path) => {
 const printCharacters = async(path) => {
     show(".loader-container")
     const characters = await path
+    if (total === 0 ) {
+        $("#results").innerHTML = '<h2 class="text-2xl font-bold text-black text-left mt-[25px]">No se han encontrado resultados</h2>'
+    }
     for (let character of characters) {
         $("#results").innerHTML += `
         <div onclick= "showCharacterDetails(${character.id})" class="bg-black hover:bg-red-600 overflow-hidden">
@@ -309,14 +312,13 @@ const pagination = (searchPath) => {
         cleanContainer("#results")
         offset += 20
         searchPath()
-        console.log(offset);
         updatePagination(total)
     }
 
     $("#last").onclick = () => {
         cleanContainer("#results")
         const pages = Math.floor(total / 20)
-        offset = (total % 20 ===0)? pages -1 : pages * 20
+        offset = (total % 20 === 0)? pages -1 : pages * 20
         searchPath()
         updatePagination(total)
     }
@@ -324,7 +326,6 @@ const pagination = (searchPath) => {
 
 
 const updatePagination = (total) => {
-    console.log(offset);
     if (offset === 0) {
         $("#first").disabled = true
         $("#previous").disabled = true
